@@ -166,3 +166,4 @@ D:\desarrollos\ApiPortafolio\ApiPortafolio\obj\Debug\net8.0\refint\ApiPortafolio
 D:\desarrollos\ApiPortafolio\ApiPortafolio\obj\Debug\net8.0\ApiPortafolio.pdb
 D:\desarrollos\ApiPortafolio\ApiPortafolio\obj\Debug\net8.0\ApiPortafolio.genruntimeconfig.cache
 D:\desarrollos\ApiPortafolio\ApiPortafolio\obj\Debug\net8.0\ref\ApiPortafolio.dll
+D:\desarrollos\ApiPortafolio\ApiPortafolio\obj\Debug\net8.0\ApiPortafolio.sourcelink.json
