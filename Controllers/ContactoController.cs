@@ -18,6 +18,10 @@ namespace ApiPortafolio.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] EmpresaContactoDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             await service.ProcesarContactoAsync(dto);
             return Ok(new { mensaje = "Datos registrados y correo enviado." });
         }

@@ -8,14 +8,23 @@ namespace ApiPortafolio.Services
     public class EmailService: IEmailService
     {
         private readonly IConfiguration config;
+        private readonly ILogger<EmailService> logger;
 
-        public EmailService(IConfiguration config)
+        public EmailService(IConfiguration config, ILogger<EmailService> logger)
         {
             this.config = config;
+            this.logger = logger;
         }
 
         public async Task EnviarCorreoAsync(EmpresaContactoDto dto)
         {
+            logger.LogInformation("Intentando enviar correo a: {Correo}", dto.Correo);
+            if (string.IsNullOrWhiteSpace(dto.Correo))
+            {
+                logger.LogError("El correo es nulo o vacío. No se puede enviar el correo.");
+                throw new ArgumentException("El correo no puede estar vacío.");
+            }
+
             var smtp = config.GetSection("Smtp");
             var mail = new MailMessage
             {

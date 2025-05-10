@@ -9,15 +9,24 @@ namespace ApiPortafolio.Services
     {
         private readonly IContactoEmpresaRepositorio repo;
         private readonly IEmailService emailService;
+        private readonly ILogger<EmpresaContactoService> logger;
 
-        public EmpresaContactoService(IContactoEmpresaRepositorio repo, IEmailService emailService)
+        public EmpresaContactoService(IContactoEmpresaRepositorio repo, IEmailService emailService, ILogger<EmpresaContactoService> logger)
         {
             this.repo = repo;
             this.emailService = emailService;
+            this.logger = logger;
         }
 
         public async Task ProcesarContactoAsync(EmpresaContactoDto dto)
         {
+            logger.LogInformation("DTO recibido: {@dto}", dto);
+
+            if (string.IsNullOrWhiteSpace(dto.Correo))
+            {
+                logger.LogWarning("El campo 'Correo' está vacío o nulo.");
+            }
+
             var empresa = new EmpresaContacto
             {
                 NombreEmpresa = dto.NombreEmpresa,
