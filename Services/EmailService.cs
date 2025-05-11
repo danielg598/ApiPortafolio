@@ -25,10 +25,22 @@ namespace ApiPortafolio.Services
                 throw new ArgumentException("El correo no puede estar vacío.");
             }
 
-            var smtp = config.GetSection("Smtp");
+            // Preferencia por appsettings.json, fallback a variables de entorno
+            string smtpUser = config["Smtp:User"] ?? Environment.GetEnvironmentVariable("SMTP__User");
+            string smtpPass = config["Smtp:Pass"] ?? Environment.GetEnvironmentVariable("SMTP__Pass");
+            string smtpHost = config["Smtp:Host"] ?? Environment.GetEnvironmentVariable("SMTP__Host");
+            string smtpPort = config["Smtp:Port"] ?? Environment.GetEnvironmentVariable("SMTP__Port");
+
+            // Validación
+            if (string.IsNullOrEmpty(smtpUser) || string.IsNullOrEmpty(smtpPass) || string.IsNullOrEmpty(smtpHost) || string.IsNullOrEmpty(smtpPort))
+            {
+                logger.LogError("No se pudo obtener configuración SMTP. Verifica appsettings.json o variables de entorno.");
+                throw new InvalidOperationException("Faltan configuraciones SMTP.");
+            }
+
             var mail = new MailMessage
             {
-                From = new MailAddress(smtp["User"]),
+                From = new MailAddress(smtpUser),
                 Subject = "Nuevo contacto de empresa",
                 Body = $"Empresa: {dto.NombreEmpresa}\n" +
                        $"Contacto: {dto.NombreContacto}\n" +
@@ -37,11 +49,11 @@ namespace ApiPortafolio.Services
                 IsBodyHtml = false
             };
 
-            mail.To.Add(smtp["User"]); // correo destinatario
+            mail.To.Add(smtpUser); // destinatario
 
-            using var smtpClient = new SmtpClient(smtp["Host"], int.Parse(smtp["Port"]))
+            using var smtpClient = new SmtpClient(smtpHost, int.Parse(smtpPort))
             {
-                Credentials = new NetworkCredential(smtp["User"], smtp["Pass"]),
+                Credentials = new NetworkCredential(smtpUser, smtpPass),
                 EnableSsl = true
             };
 
